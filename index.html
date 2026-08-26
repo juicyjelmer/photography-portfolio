@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jelmer Bontje</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #ffffff;
+      --off: #f5f5f3;
+      --ink: #111110;
+      --muted: #888884;
+      --border: #e8e8e5;
+      --tab-h: 40px;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--white);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 20px 0;
+    }
+
+    .site-name {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .header-links a {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .header-links a:hover { color: var(--ink); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 28px 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    .tab {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0 0 12px;
+      margin-right: 28px;
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+      margin-bottom: -1px;
+    }
+
+    .tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    .tab:hover:not(.active) { color: var(--ink); }
+
+    /* ── Grid ── */
+    .gallery {
+      padding: 12px;
+      columns: 2;
+      column-gap: 12px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 12px;
+      display: block;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover img { opacity: 0.88; }
+
+    /* hidden panel */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Collection view ── */
+    .collection-header {
+      padding: 24px 20px 4px;
+    }
+
+    .back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 20px;
+      transition: color 0.15s ease;
+    }
+
+    .back-link:hover { color: var(--ink); }
+
+    .collection-title {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .collection-description {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 640px;
+      margin-bottom: 8px;
+    }
+
+    .gallery-item.clickable { cursor: pointer; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 40px 20px 32px;
+      border-top: 1px solid var(--border);
+      margin-top: 2px;
+    }
+
+    footer p {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Desktop ── */
+    @media (min-width: 768px) {
+      header { padding: 36px 40px 0; }
+      .tabs { padding: 32px 40px 0; }
+      .gallery { columns: 3; padding: 16px; column-gap: 16px; }
+      .gallery-item { margin-bottom: 16px; }
+      .collection-header { padding: 32px 40px 4px; }
+      footer { padding: 48px 40px 36px; }
+    }
+
+    @media (min-width: 1200px) {
+      .gallery { columns: 4; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="site-name" href="#">Jelmer Bontje</a>
+    <nav class="header-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-panel="artistic">Artistic work</button>
+    <button class="tab" data-panel="corporate">Corporate work</button>
+  </nav>
+
+  <div class="panel active" id="panel-artistic">
+    <div class="gallery" id="gallery-artistic"></div>
+  </div>
+
+  <div class="panel" id="panel-corporate">
+    <div class="gallery" id="gallery-corporate"></div>
+  </div>
+
+  <div class="panel" id="panel-collection">
+    <div class="collection-header">
+      <button class="back-link" id="collection-back">&larr; Back</button>
+      <h1 class="collection-title" id="collection-title"></h1>
+      <p class="collection-description" id="collection-description"></p>
+    </div>
+    <div class="gallery" id="gallery-collection"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jelmer Bontje — Photography</p>
+  </footer>
+
+  <script>
+    const PLACEHOLDERS = {
+      artistic: [
+        ['600x800','e8e8e5'],['600x400','d8d8d5'],['600x750','e0e0dd'],
+        ['600x500','d0d0cd'],['600x900','e4e4e1'],['600x600','dcdcd9'],
+        ['600x450','e8e8e5'],['600x700','d8d8d5'],['600x550','e0e0dd'],['600x800','d4d4d1']
+      ],
+      corporate: [
+        ['600x600','e4e4e1'],['600x900','dcdcd9'],['600x500','e8e8e5'],
+        ['600x750','d8d8d5'],['600x650','e0e0dd'],['600x800','d4d4d1']
+      ]
+    }
+
+    async function loadGallery(category) {
+      const gallery = document.getElementById('gallery-' + category)
+      let featured = []
+      let loose = []
+
+      try {
+        const res = await fetch(`/content/${category}/data.json`)
+        ;({ featured, loose } = await res.json())
+      } catch {}
+
+      if (featured.length === 0 && loose.length === 0) {
+        loose = PLACEHOLDERS[category].map(([size, color]) =>
+          `https://placehold.co/${size}/${color}/888884?text=.`
+        )
+      }
+
+      const featuredHtml = featured.map(({ src, collection }) =>
+        `<div class="gallery-item clickable" data-category="${category}" data-collection="${collection}"><img src="${src}" alt="" loading="lazy" /></div>`
+      ).join('')
+
+      const looseHtml = loose.map(src =>
+        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" /></div>`
+      ).join('')
+
+      gallery.innerHTML = featuredHtml + looseHtml
+
+      gallery.querySelectorAll('.gallery-item.clickable').forEach(item => {
+        item.addEventListener('click', () => openCollection(item.dataset.category, item.dataset.collection))
+      })
+    }
+
+    loadGallery('artistic')
+    loadGallery('corporate')
+
+    const tabs = document.querySelectorAll('.tab')
+    const tabsNav = document.querySelector('.tabs')
+    const panels = document.querySelectorAll('.panel')
+    let lastTabPanel = 'artistic'
+
+    function showPanel(name) {
+      panels.forEach(p => p.classList.remove('active'))
+      document.getElementById('panel-' + name).classList.add('active')
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'))
+        tab.classList.add('active')
+        lastTabPanel = tab.dataset.panel
+        tabsNav.style.display = ''
+        showPanel(lastTabPanel)
+      })
+    })
+
+    async function openCollection(category, slug) {
+      const gallery = document.getElementById('gallery-collection')
+      const titleEl = document.getElementById('collection-title')
+      const descEl = document.getElementById('collection-description')
+
+      let data = { title: slug, description: '', images: [] }
+      try {
+        const res = await fetch(`/content/${category}/${encodeURIComponent(slug)}/data.json`)
+        data = await res.json()
+      } catch {}
+
+      titleEl.textContent = data.title
+      descEl.textContent = data.description || ''
+      gallery.innerHTML = data.images.map(src =>
+        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" /></div>`
+      ).join('')
+
+      tabsNav.style.display = 'none'
+      showPanel('collection')
+      window.scrollTo(0, 0)
+    }
+
+    document.getElementById('collection-back').addEventListener('click', () => {
+      tabsNav.style.display = ''
+      showPanel(lastTabPanel)
+    })
+  </script>
+
+</body>
+</html>

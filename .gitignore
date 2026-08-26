@@ -1,0 +1,4 @@
+node_modules/
+content/**/data.json
+content/**/*-min.jpg
+content/**/*-min.jpeg

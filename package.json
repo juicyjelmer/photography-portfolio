@@ -1,0 +1,14 @@
+{
+  "name": "photography-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs",
+    "compress": "node scripts/compress-images.mjs",
+    "build": "node scripts/compress-images.mjs && node scripts/build-data.mjs",
+    "dev": "npm run build && node serve.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.35.4"
+  }
+}
