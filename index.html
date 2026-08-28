@@ -33,12 +33,14 @@
     }
 
     .site-name {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
+      display: block;
+      line-height: 0;
+    }
+
+    .site-name img {
+      height: 38px;
+      width: auto;
+      display: block;
     }
 
     .header-links {
@@ -175,6 +177,7 @@
     /* ── Desktop ── */
     @media (min-width: 768px) {
       header { padding: 36px 40px 0; }
+      .site-name img { height: 48px; }
       .tabs { padding: 32px 40px 0; }
       .gallery { columns: 3; padding: 16px; column-gap: 16px; }
       .gallery-item { margin-bottom: 16px; }
@@ -190,9 +193,9 @@
 <body>
 
   <header>
-    <a class="site-name" href="#">Jelmer Bontje</a>
+    <a class="site-name" href="index.html"><img src="content/Menu/namecard.jpg" alt="Jelmer Bontje" /></a>
     <nav class="header-links">
-      <a href="#">About</a>
+      <a href="about.html">About</a>
       <a href="#">Contact</a>
     </nav>
   </header>
