@@ -111,14 +111,17 @@
     .gallery-item img {
       width: 100%;
       display: block;
-      transition: opacity 0.3s ease;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
 
-    .gallery-item:hover img { opacity: 0.88; }
+    .gallery-item img.loaded { opacity: 1; }
+    .gallery-item:hover img.loaded { opacity: 0.88; }
 
     /* hidden panel */
-    .panel { display: none; }
+    .panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
     .panel.active { display: block; }
+    .panel.active.fade-in { opacity: 1; }
 
     /* ── Collection view ── */
     .collection-header {
@@ -196,7 +199,7 @@
     <a class="site-name" href="index.html"><img src="content/Menu/namecard.jpg" alt="Jelmer Bontje" /></a>
     <nav class="header-links">
       <a href="about.html">About</a>
-      <a href="#">Contact</a>
+      <a href="about.html#contact">Contact</a>
     </nav>
   </header>
 
@@ -205,7 +208,7 @@
     <button class="tab" data-panel="corporate">Corporate work</button>
   </nav>
 
-  <div class="panel active" id="panel-artistic">
+  <div class="panel active fade-in" id="panel-artistic">
     <div class="gallery" id="gallery-artistic"></div>
   </div>
 
@@ -256,11 +259,11 @@
       }
 
       const featuredHtml = featured.map(({ src, collection }) =>
-        `<div class="gallery-item clickable" data-category="${category}" data-collection="${collection}"><img src="${src}" alt="" loading="lazy" /></div>`
+        `<div class="gallery-item clickable" data-category="${category}" data-collection="${collection}"><img src="${src}" alt="" loading="lazy" onload="this.classList.add('loaded')" /></div>`
       ).join('')
 
       const looseHtml = loose.map(src =>
-        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" /></div>`
+        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" onload="this.classList.add('loaded')" /></div>`
       ).join('')
 
       gallery.innerHTML = featuredHtml + looseHtml
@@ -268,6 +271,7 @@
       gallery.querySelectorAll('.gallery-item.clickable').forEach(item => {
         item.addEventListener('click', () => openCollection(item.dataset.category, item.dataset.collection))
       })
+      gallery.querySelectorAll('img').forEach(img => { if (img.complete) img.classList.add('loaded') })
     }
 
     loadGallery('artistic')
@@ -279,8 +283,10 @@
     let lastTabPanel = 'artistic'
 
     function showPanel(name) {
-      panels.forEach(p => p.classList.remove('active'))
-      document.getElementById('panel-' + name).classList.add('active')
+      panels.forEach(p => p.classList.remove('active', 'fade-in'))
+      const panel = document.getElementById('panel-' + name)
+      panel.classList.add('active')
+      requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('fade-in')))
     }
 
     tabs.forEach(tab => {
@@ -306,9 +312,11 @@
 
       titleEl.textContent = data.title
       descEl.textContent = data.description || ''
+      descEl.style.display = data.description ? '' : 'none'
       gallery.innerHTML = data.images.map(src =>
-        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" /></div>`
+        `<div class="gallery-item"><img src="${src}" alt="" loading="lazy" onload="this.classList.add('loaded')" /></div>`
       ).join('')
+      gallery.querySelectorAll('img').forEach(img => { if (img.complete) img.classList.add('loaded') })
 
       tabsNav.style.display = 'none'
       showPanel('collection')

@@ -107,18 +107,22 @@
       object-fit: cover;
       object-position: center 15%;
       display: block;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+
+    .about-photo img.loaded { opacity: 1; }
 
     .about-text {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .about-text p {
       font-size: 13px;
       font-weight: 300;
-      line-height: 1.8;
+      line-height: 1.7;
       color: var(--ink);
     }
 
@@ -126,6 +130,33 @@
       color: var(--muted);
       font-style: italic;
     }
+
+    .about-subhead {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .contact-links a {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      width: fit-content;
+      transition: border-color 0.15s ease;
+    }
+
+    .contact-links a:hover { border-color: var(--ink); }
 
     /* ── Footer ── */
     footer {
@@ -145,12 +176,12 @@
     @media (min-width: 768px) {
       header { padding: 36px 40px 0; }
       .site-name img { height: 48px; }
-      .about-header { padding: 32px 40px 4px; }
+      .about-header { padding: 28px 40px 0; }
       .about-layout {
         flex-direction: row;
         align-items: flex-start;
         gap: 64px;
-        padding: 28px 40px 56px;
+        padding: 24px 40px 56px;
       }
       .about-photo {
         flex: 0 0 auto;
@@ -172,7 +203,7 @@
     <a class="site-name" href="index.html"><img src="content/Menu/namecard.jpg" alt="Jelmer Bontje" /></a>
     <nav class="header-links">
       <a class="current" href="about.html">About</a>
-      <a href="#">Contact</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
@@ -183,13 +214,22 @@
 
   <div class="about-layout">
     <div class="about-photo">
-      <img src="content/About/portrets-2-min.jpg" alt="Jelmer Bontje" />
+      <img src="content/About/portrets-2-min.jpg" alt="Jelmer Bontje" onload="this.classList.add('loaded')" />
     </div>
 
     <div class="about-text">
-      <p class="placeholder">[A short introduction — who you are, where you're based, and how you got into photography.]</p>
-      <p>My work moves between two worlds: artistic, unscripted portraits and street photography on one side, and considered corporate work — headshots, events, company days — on the other.</p>
-      <p class="placeholder">[A line or two on your approach, or what clients and subjects can expect when working with you.]</p>
+      <p>Hoi, ik ben Jelmer, fotograaf gespecialiseerd in het maken van portretten van mensen in hun element.</p>
+      <p>Ik leg niet alleen gezichten vast, maar vooral wat mensen drijft: een kunstenaar in zijn atelier, de handen van een ceramist die aan het werk is, de concentratie vlak voor een optreden. Momenten waarin iemand het meest zichzelf is en die een verhaal vertellen.</p>
+      <p>Deze blik komt voort uit mijn achtergrond in de straatfotografie, waar ik leerde kijken naar ongeposeerde, echte momenten.</p>
+      <p>Ben je bezig met iets waar je trots op bent en wil je dat op de juiste manier vastgelegd zien? Neem gerust contact op.</p>
+
+      <div id="contact">
+        <h2 class="about-subhead">Contact</h2>
+        <div class="contact-links">
+          <a href="mailto:jelmer@bontje.net">jelmer@bontje.net</a>
+          <a href="https://www.instagram.com/juicy_jelmer/" target="_blank" rel="noopener">Instagram — @juicy_jelmer</a>
+        </div>
+      </div>
     </div>
   </div>
 
