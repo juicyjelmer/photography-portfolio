@@ -23,19 +23,19 @@ jobs:
       - name: Build (compress photos + generate collection data)
         run: npm run build
 
-      - name: Upload to Strato via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Prepare deploy folder
+        run: |
+          mkdir -p dist
+          cp index.html about.html dist/
+          cp -r content dist/content
+
+      - name: Upload to Strato via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/node_modules/**
-            **/scripts/**
-            **/package.json
-            **/package-lock.json
-            **/serve.mjs
+          username: ${{ secrets.SFTP_USERNAME }}
+          server: ${{ secrets.SFTP_HOST }}
+          port: 22
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: './dist/*'
+          remote_path: ${{ secrets.SFTP_REMOTE_PATH }}
+          sftp_only: true
