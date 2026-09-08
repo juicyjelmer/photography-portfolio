@@ -2,3 +2,7 @@ node_modules/
 content/**/data.json
 content/**/*-min.jpg
 content/**/*-min.jpeg
+
+# these -min files have no raw source to regenerate from - must stay tracked
+!content/corporate/Holy Swap/Final-29-min.jpg
+!content/corporate/Holy Swap/Final-31-min.jpg
