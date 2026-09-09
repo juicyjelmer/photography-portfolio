@@ -45,8 +45,24 @@ for (const category of fs.readdirSync(CONTENT_DIR, { withFileTypes: true })) {
     }
   }
 
+  // optional content/<category>/order.json: pins specific photos to the front and/or
+  // back of the homepage grid. Either a bare array (treated as "front" pins, for
+  // backwards compatibility) or { "front": [...], "back": [...] } - each entry is
+  // "collection-slug/filename.jpg"
+  let orderedFeatured = featured
+  try {
+    const raw = JSON.parse(fs.readFileSync(path.join(categoryDir, 'order.json'), 'utf8'))
+    const frontPins = Array.isArray(raw) ? raw : (raw.front || [])
+    const backPins = Array.isArray(raw) ? [] : (raw.back || [])
+    const key = (f) => `${f.collection}/${path.basename(f.src)}`
+    const front = frontPins.map(p => featured.find(f => key(f) === p)).filter(Boolean).map(f => ({ ...f, pinned: true }))
+    const back = backPins.map(p => featured.find(f => key(f) === p)).filter(Boolean)
+    const usedKeys = new Set([...front, ...back].map(key))
+    orderedFeatured = [...front, ...featured.filter(f => !usedKeys.has(key(f))), ...back]
+  } catch {}
+
   const looseFiles = dedupeMinVariants(loose).map(f => `/content/${category.name}/${f}`)
-  fs.writeFileSync(path.join(categoryDir, 'data.json'), JSON.stringify({ featured, loose: looseFiles }))
+  fs.writeFileSync(path.join(categoryDir, 'data.json'), JSON.stringify({ featured: orderedFeatured, loose: looseFiles }))
   written++
 }
 
